@@ -1,0 +1,63 @@
+class Students {
+  final String id;
+  final String? name;
+  final String? birthDay;
+  final String? familyName;
+  final String? classLevel;
+  final String? fatherName;
+  final String? motherName;
+  final String? motherFamilyName;
+
+  const Students(
+      {required this.id,
+      this.name,
+      this.familyName,
+        this.birthDay,
+      this.classLevel,
+      this.fatherName,
+      this.motherName,
+      this.motherFamilyName});
+  factory Students.fromJson(Map<String, dynamic> json) {
+    return Students(
+      id: json['id'] ?? '',
+      name: json['name'],
+      familyName: json['familyName'],
+
+      birthDay: json['birthDay'],
+      classLevel: json['class'],
+      fatherName: json['fatherName'],
+      motherName: json['motherName'],
+      motherFamilyName: json['motherFamilyName'],
+    );
+  }
+  // Method to convert Student instance to a map for Firebase
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'familyName': familyName,
+      'birthDay': birthDay,
+      'classLevel': classLevel,
+      'fatherName': fatherName,
+      'motherName': motherName,
+      'motherFamilyName': motherFamilyName,
+    };
+  }
+}
+
+class ListOfStudents {
+  final List<Students> listOfStudents;
+
+  const ListOfStudents({
+    required this.listOfStudents,
+  });
+  factory ListOfStudents.fromJson(Map<String, dynamic> json) {
+    List<Students> studentsList = [];
+
+    json.forEach((key, value) {
+      studentsList.add(Students.fromJson(value));
+    });
+
+    return ListOfStudents(listOfStudents: studentsList);
+  }
+}
