@@ -1,6 +1,6 @@
 # el_shaddai_edu_portal
 
-A new Flutter project.
+Complexe Scolaire El Shaddai.
 
 ## Getting Started
 

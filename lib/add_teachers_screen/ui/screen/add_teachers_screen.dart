@@ -77,7 +77,7 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                       context: context,
                       initialDate: selectedDate,
                       firstDate: DateTime(1900),
-                      locale: const Locale('fr', 'FR'),
+
                       // Set a minimum allowed date
                       lastDate: DateTime
                           .now(), // Set a maximum allowed date (current date)
