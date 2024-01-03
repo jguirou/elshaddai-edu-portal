@@ -8,6 +8,7 @@ import '../../../repositories/admin_repository/admin_repository.dart';
 import '../model/students.dart';
 
 part 'students_event.dart';
+
 part 'students_state.dart';
 
 class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
@@ -16,6 +17,7 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
     on<OnGetStudents>(_onGetStudents);
     on<OnEditStudentsData>(_onEditStudentsData);
   }
+
   void _initializeDatabase(InitializeDatabase event, Emitter emit) {
     final database = FirebaseDatabase.instance.ref();
 
@@ -25,17 +27,16 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
       studentsReference: students,
     ));
   }
-  void _onGetStudents(OnGetStudents event, Emitter emit) async{
-    await for(final event  in AdminRepository().getStudentsStream(state.databaseReference!) ){
+
+  void _onGetStudents(OnGetStudents event, Emitter emit) async {
+    await for (final event
+        in AdminRepository().getStudentsStream(state.databaseReference!)) {
       event.when(loading: () {
         emit(state.copyWith(
           isLoading: true,
         ));
       }, success: (d) {
-        emit(state.copyWith(
-          isLoading: false,
-          studentsList: d?.listOfStudents
-        ));
+        emit(state.copyWith(isLoading: false, studentsList: d.listOfStudents));
       }, error: (e) {
         emit(state.copyWith(
           isLoading: false,
@@ -43,11 +44,23 @@ class StudentsBloc extends Bloc<StudentsEvent, StudentsState> {
       });
     }
   }
-  void _onEditStudentsData(OnEditStudentsData event, Emitter emit) async{
-    final studentId = event.newStudents.id;
 
-    await state.databaseReference?.child("students/$studentId").update(
-      event.newStudents.toMap(),
-    );
+  void _onEditStudentsData(OnEditStudentsData event, Emitter emit) async {
+    await for (final event in AdminRepository()
+        .updateStudentsStream(state.databaseReference!, event.newStudents)) {
+      event.when(loading: () {
+        emit(state.copyWith(
+          isLoading: true,
+        ));
+      }, success: (d) {
+        emit(state.copyWith(
+          isLoading: false,
+        ));
+      }, error: (e) {
+        emit(state.copyWith(
+          isLoading: false,
+        ));
+      });
+    }
   }
 }

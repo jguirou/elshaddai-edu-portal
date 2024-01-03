@@ -8,6 +8,8 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 
 import '../../../add_students_screen/ui/screen/add_students_screen.dart';
 import '../../../add_teachers_screen/ui/screen/add_teachers_screen.dart';
+import '../../../classes_screen/ui/widgets/classes_content.dart';
+import '../../../school_fees_screen/ui/screen/school_fees_screen.dart';
 import '../../../teachers_screen/ui/screen/teachers_screen.dart';
 import '../widgets/registration_content.dart';
 
@@ -23,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   PageController pageController = PageController();
   SideMenuController sideMenu = SideMenuController();
+  late String classLevel;
 
   @override
   void initState() {
@@ -143,6 +146,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.person_add),
               ),
               SideMenuItem(
+                title: 'Frais de scolarité',
+                onTap: (index, _) {
+                  sideMenu.changePage(index);
+                },
+                icon: const Icon(Icons.monetization_on),
+              ),
+              SideMenuItem(
+                title: 'Classes',
+                onTap: (index, _) {
+                  sideMenu.changePage(index);
+                },
+                icon: const Icon(Icons.class_),
+              ),
+              SideMenuItem(
                 builder: (context, displayMode) {
                   return const Divider(
                     endIndent: 8,
@@ -159,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               SideMenuItem(
-                title: 'Se deconnecter',
+                title: 'Se déconnecter',
                 icon: Icon(Icons.exit_to_app),
                 onTap: (index, _) {
                   /// goto signout
@@ -167,8 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text("Se deconnecter"),
-                        content: Text("Êtes-vous sûr de vous deconnecter?"),
+                        title: const Text("Se déconnecter"),
+                        content: Text("Êtes-vous sûr de vous déconnecter?"),
                         actions: [
                           ElevatedButton(
                             onPressed: () {
@@ -301,7 +318,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   )),
                 ),
-
+                /// School fees
+                Container(
+                  color: Colors.white,
+                  child: const Center(
+                    child: SchoolFeesScreen(),
+                  ),
+                ),
+                /// Classes
+                Container(
+                  color: Colors.white,
+                  child: Center(
+                      child: ClassesContent(
+                        onTapped: (index){
+                          sideMenu.changePage(6);
+                        },
+                      )
+                  ),
+                ),
                 /// About
                 Container(
                   color: Colors.white,

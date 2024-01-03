@@ -7,29 +7,36 @@ class Students {
   final String? fatherName;
   final String? motherName;
   final String? motherFamilyName;
+  final Map<String, int>? schoolFees;
 
-  const Students(
-      {required this.id,
-      this.name,
-      this.familyName,
-        this.birthDay,
-      this.classLevel,
-      this.fatherName,
-      this.motherName,
-      this.motherFamilyName});
+  const Students({
+    required this.id,
+    this.name,
+    this.familyName,
+    this.birthDay,
+    this.classLevel,
+    this.fatherName,
+    this.motherName,
+    this.motherFamilyName,
+    this.schoolFees,
+  });
+
   factory Students.fromJson(Map<String, dynamic> json) {
     return Students(
       id: json['id'] ?? '',
       name: json['name'],
       familyName: json['familyName'],
-
       birthDay: json['birthDay'],
       classLevel: json['class'],
       fatherName: json['fatherName'],
       motherName: json['motherName'],
       motherFamilyName: json['motherFamilyName'],
+      schoolFees: json['schoolFees'] != null
+          ? Map<String, int>.from(json['schoolFees'])
+          : null,
     );
   }
+
   // Method to convert Student instance to a map for Firebase
   Map<String, dynamic> toMap() {
     return {
@@ -41,6 +48,7 @@ class Students {
       'fatherName': fatherName,
       'motherName': motherName,
       'motherFamilyName': motherFamilyName,
+      'schoolFees': schoolFees
     };
   }
 }
@@ -51,6 +59,7 @@ class ListOfStudents {
   const ListOfStudents({
     required this.listOfStudents,
   });
+
   factory ListOfStudents.fromJson(Map<String, dynamic> json) {
     List<Students> studentsList = [];
 

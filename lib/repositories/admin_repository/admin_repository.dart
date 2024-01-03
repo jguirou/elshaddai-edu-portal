@@ -78,6 +78,55 @@ class AdminRepository {
       return Resource.error("error: $e");
     }
   }
+  Future<Resource<bool>?> updateStudents(
+      DatabaseReference databaseReference, Students students) async {
+    try {
+
+      await databaseReference.child("students/${students.id}").update(
+        students.toMap(),
+      );
+      return Resource.success(true);
+    } catch (e) {
+      return Resource.error("error: $e");
+    }
+  }
+  Stream<Resource<bool>> updateStudentsStream(DatabaseReference databaseReference, Students students) async* {
+    try {
+      final result = await updateStudents(databaseReference, students);
+
+      if (result != null && result is Success<bool>) {
+        yield Resource.success(result.data);
+      }
+    } catch (e) {
+      yield Resource.error("Error: $e");
+    }
+  }
+
+  Future<Resource<bool>?> updateTeachers(
+      DatabaseReference databaseReference, Teachers teachers) async {
+    try {
+
+      await databaseReference.child("teachers/${teachers.id}").update(
+        teachers.toMap(),
+      );
+      return Resource.success(true);
+    } catch (e) {
+      return Resource.error("error: $e");
+    }
+  }
+  Stream<Resource<bool>> updateTeachersStream(DatabaseReference databaseReference, Teachers teachers) async* {
+    try {
+      final result = await updateTeachers(databaseReference, teachers);
+
+      if (result != null && result is Success<bool>) {
+        yield Resource.success(result.data);
+      }
+    } catch (e) {
+      yield Resource.error("Error: $e");
+    }
+  }
+
+
   Stream<Resource<ListOfStudents>> getStudentsStream(DatabaseReference databaseReference) {
     final StreamController<Resource<ListOfStudents>> controller =
     StreamController<Resource<ListOfStudents>>();

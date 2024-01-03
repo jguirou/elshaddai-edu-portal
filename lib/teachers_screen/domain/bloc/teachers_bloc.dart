@@ -43,10 +43,22 @@ class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
     }
   }
   void _onEditTeachersData(OnEditTeachersData event, Emitter emit) async{
-    final studentId = event.newTeachers.id;
 
-    await state.databaseReference?.child("teachers/$studentId").update(
-      event.newTeachers.toMap(),
-    );
+    await for (final event in AdminRepository()
+        .updateTeachersStream(state.databaseReference!, event.newTeachers)) {
+      event.when(loading: () {
+        emit(state.copyWith(
+          isLoading: true,
+        ));
+      }, success: (d) {
+        emit(state.copyWith(
+          isLoading: false,
+        ));
+      }, error: (e) {
+        emit(state.copyWith(
+          isLoading: false,
+        ));
+      });
+    }
   }
 }

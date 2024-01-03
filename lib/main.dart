@@ -2,6 +2,7 @@ import 'package:el_shaddai_edu_portal/add_students_screen/ui/screen/add_students
 import 'package:el_shaddai_edu_portal/login_screen/domain/login_bloc.dart';
 import 'package:el_shaddai_edu_portal/login_screen/ui/screen/login_screen.dart';
 import 'package:el_shaddai_edu_portal/repositories/admin_repository/admin_repository.dart';
+import 'package:el_shaddai_edu_portal/school_fees_screen/ui/screen/school_fees_screen.dart';
 import 'package:el_shaddai_edu_portal/signup_screen/ui/screen/signup_screen.dart';
 import 'package:el_shaddai_edu_portal/students_screen/ui/screen/students_screen.dart';
 import 'package:el_shaddai_edu_portal/teachers_screen/ui/screen/teachers_screen.dart';
@@ -46,18 +47,19 @@ class MyApp extends StatelessWidget {
         child: BlocProvider(
           create: (context) => LoginBloc(
           ),
-          child: LoginScreen(),
+          child: const LoginScreen(),
         ),
       ),
       debugShowCheckedModeBanner: false,
-      title: 'ElSaddaiEduPortal',
+      title: 'El Shaddai Edu Portal',
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/signUp': (context) => SignUpScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/signUp': (context) => const SignUpScreen(),
         '/home': (context) => const HomeScreen(title:"Complexe Scolaire ElShaddai"),
         '/add_students': (context) => AddStudentsScreen(onAddClicked: (){}, onCancelClicked: (){},),
         '/teachers': (context) => const TeachersScreen(),
         '/students': (context) => const StudentsScreen(),
+        '/school_fees': (context) => const SchoolFeesScreen(),
 
       },
     );
