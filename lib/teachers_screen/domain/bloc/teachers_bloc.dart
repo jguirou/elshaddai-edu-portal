@@ -7,6 +7,7 @@ import '../../../repositories/admin_repository/admin_repository.dart';
 import '../model/teachers.dart';
 
 part 'teachers_event.dart';
+
 part 'teachers_state.dart';
 
 class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
@@ -15,6 +16,7 @@ class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
     on<OnGetTeachers>(_onGetTeachers);
     on<OnEditTeachersData>(_onEditTeachersData);
   }
+
   void _initializeDatabase(InitializeDatabase event, Emitter emit) {
     final database = FirebaseDatabase.instance.ref();
 
@@ -24,17 +26,16 @@ class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
       studentsReference: students,
     ));
   }
-  void _onGetTeachers(OnGetTeachers event, Emitter emit) async{
-    await for(final event  in AdminRepository().getTeachersStream(state.databaseReference!) ){
+
+  void _onGetTeachers(OnGetTeachers event, Emitter emit) async {
+    await for (final event
+        in AdminRepository().getTeachersStream(state.databaseReference!)) {
       event.when(loading: () {
         emit(state.copyWith(
           isLoading: true,
         ));
       }, success: (d) {
-        emit(state.copyWith(
-            isLoading: false,
-            teachersList: d.listOfTeachers
-        ));
+        emit(state.copyWith(isLoading: false, teachersList: d.listOfTeachers));
       }, error: (e) {
         emit(state.copyWith(
           isLoading: false,
@@ -42,8 +43,8 @@ class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
       });
     }
   }
-  void _onEditTeachersData(OnEditTeachersData event, Emitter emit) async{
 
+  void _onEditTeachersData(OnEditTeachersData event, Emitter emit) async {
     await for (final event in AdminRepository()
         .updateTeachersStream(state.databaseReference!, event.newTeachers)) {
       event.when(loading: () {

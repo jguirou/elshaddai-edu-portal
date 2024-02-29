@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:intl/intl.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -82,7 +82,11 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
     final newStudents = state.databaseReference?.child("students/").push();
     String userId = newStudents!.key!;
     newStudents.set(
-        {'id': userId, 'name': state.name, 'familyName': state.familyName,  'birthDay': state.birthDay ,'class': state.classLevel, 'fatherName': state.fatherName, 'fatherFamilyName': state.familyName, 'motherName': state.motherName, 'motherFamilyName': state.motherFamilyName});
+        {'id': userId, 'name': state.name, 'familyName': state.familyName,  'birthDay': state.birthDay ,'class': state.classLevel, 'fatherName': state.fatherName, 'fatherFamilyName': state.familyName, 'motherName': state.motherName, 'motherFamilyName': state.motherFamilyName, 'schoolFees':  Map.fromIterable(
+        List.generate(12, (index) => DateTime(2022, index + 1)),
+        key: (date) => DateFormat.MMMM().format(date),
+        value: (_) => 0,
+        )});
 
     emit(state.copyWith(
       name: '',
@@ -91,7 +95,8 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
       classLevel: '',
       fatherName: '',
       motherFamilyName: '',
-      motherName: ''
+      motherName: '',
+
     ));
   }
 

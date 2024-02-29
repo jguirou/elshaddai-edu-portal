@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../school_fees_screen/ui/screen/school_fees_screen.dart';
 import '../../domain/bloc/students_bloc.dart';
 import 'package:expandable_datatable/expandable_datatable.dart';
-
+import 'package:intl/intl.dart';
 import '../widgets/edit_text_field.dart';
 
 class StudentsScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class StudentsScreen extends StatefulWidget {
 class _StudentsScreenState extends State<StudentsScreen> {
   late List<ExpandableColumn<dynamic>> headers;
   late List<ExpandableRow> rows;
-  late Map<String, int> schoolFees ;
+  late Map<String, int> schoolFees;
 
   @override
   void initState() {
@@ -39,7 +39,8 @@ class _StudentsScreenState extends State<StudentsScreen> {
       ExpandableColumn<String>(
           columnTitle: "Prénom(s) de la mère", columnFlex: 3),
       ExpandableColumn<String>(columnTitle: "Nom de la mère", columnFlex: 3),
-      ExpandableColumn<Map<String, int>>(columnTitle: "Frais de scolarité", columnFlex: 3),
+      ExpandableColumn<Map<String, int>>(
+          columnTitle: "Frais de scolarité", columnFlex: 3),
     ];
   }
 
@@ -88,17 +89,31 @@ class _StudentsScreenState extends State<StudentsScreen> {
                         headers: headers,
                         rows: state.studentsList.map<ExpandableRow>((e) {
                           List<ExpandableCell<dynamic>> cells = [
-                            ExpandableCell<String>(columnTitle: "ID", value: e.id),
-                            ExpandableCell<String>(columnTitle: "Prénom(s)", value: e.name),
-                            ExpandableCell<String>(columnTitle: "Nom", value: e.familyName),
-                            ExpandableCell<String>(columnTitle: "Date de naissance", value: e.birthDay),
-                            ExpandableCell<String>(columnTitle: "Niveau scolaire", value: e.classLevel),
-                            ExpandableCell<String>(columnTitle: "Prénom(s) du père", value: e.fatherName),
-                            ExpandableCell<String>(columnTitle: "Prénom(s) de la mère", value: e.motherName),
-                            ExpandableCell<String>(columnTitle: "Nom de la mère", value: e.motherFamilyName),
-                            ExpandableCell<Map<String, int>>(columnTitle: "Frais de scolarité", value: e.schoolFees),
+                            ExpandableCell<String>(
+                                columnTitle: "ID", value: e.id),
+                            ExpandableCell<String>(
+                                columnTitle: "Prénom(s)", value: e.name),
+                            ExpandableCell<String>(
+                                columnTitle: "Nom", value: e.familyName),
+                            ExpandableCell<String>(
+                                columnTitle: "Date de naissance",
+                                value: e.birthDay),
+                            ExpandableCell<String>(
+                                columnTitle: "Niveau scolaire",
+                                value: e.classLevel),
+                            ExpandableCell<String>(
+                                columnTitle: "Prénom(s) du père",
+                                value: e.fatherName),
+                            ExpandableCell<String>(
+                                columnTitle: "Prénom(s) de la mère",
+                                value: e.motherName),
+                            ExpandableCell<String>(
+                                columnTitle: "Nom de la mère",
+                                value: e.motherFamilyName),
+                            ExpandableCell<Map<String, int>>(
+                                columnTitle: "Frais de scolarité",
+                                value: e.schoolFees),
                           ];
-
 
                           return ExpandableRow(cells: cells);
                         }).toList(),
@@ -111,11 +126,14 @@ class _StudentsScreenState extends State<StudentsScreen> {
                           print(page);
                         },
                         renderEditDialog: (row, onSuccess) => _buildEditDialog(
-                            row, onSuccess, onEdited: (newStudents) {
-                          context
-                              .read<StudentsBloc>()
-                              .add(OnEditStudentsData(newStudents));
-                        }, ),
+                          row,
+                          onSuccess,
+                          onEdited: (newStudents) {
+                            context
+                                .read<StudentsBloc>()
+                                .add(OnEditStudentsData(newStudents));
+                          },
+                        ),
                         visibleColumnCount: visibleCount,
                       ),
                     );
@@ -127,11 +145,8 @@ class _StudentsScreenState extends State<StudentsScreen> {
     ));
   }
 
-  Widget _buildEditDialog(
-      ExpandableRow row,
-      Function(ExpandableRow) onSuccess,
-      {required Function(Students students) onEdited}
-      ) {
+  Widget _buildEditDialog(ExpandableRow row, Function(ExpandableRow) onSuccess,
+      {required Function(Students students) onEdited}) {
     // Existing controllers
     TextEditingController firstNameController = TextEditingController();
     TextEditingController lastNameController = TextEditingController();
@@ -222,6 +237,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
       ],
     );
   }
+
   // Helper function to extract cell values dynamically
   T? getCellValue<T>(ExpandableRow row, int index) {
     try {
@@ -232,7 +248,4 @@ class _StudentsScreenState extends State<StudentsScreen> {
       return null;
     }
   }
-
 }
-
-

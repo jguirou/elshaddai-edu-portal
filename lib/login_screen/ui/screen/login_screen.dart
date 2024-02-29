@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:el_shaddai_edu_portal/add_students_screen/ui/widgets/my_card_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,9 +44,9 @@ class LoginScreen extends StatelessWidget {
                           //rightPadding: 50,
                           children: [
                             const Text(
-                              'Complexe Scolaire El Shaddai',
+                              "Complexe Scolaire El Shaddai",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style:  TextStyle(
                                 fontFamily: 'Sacramento-Regular',
                                 //fontSize: 30,
                                 fontWeight: FontWeight.bold,
@@ -65,10 +66,10 @@ class LoginScreen extends StatelessWidget {
                               indent: 8.0,
                               endIndent: 8.0,
                             ),
-                            const Text(
+                             Text(
                               textAlign: TextAlign.center,
-                              'ADMINISTRATION',
-                              style: TextStyle(
+                              'Administration'.toUpperCase(),
+                              style: const TextStyle(
                                 //fontSize: 25,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,

@@ -1,3 +1,4 @@
+import 'package:el_shaddai_edu_portal/about_screen/ui/screen/about_screen.dart';
 import 'package:el_shaddai_edu_portal/home_screen/ui/widgets/home_content.dart';
 import 'package:el_shaddai_edu_portal/students_screen/ui/screen/students_screen.dart';
 import 'package:el_shaddai_edu_portal/themes/colors.dart';
@@ -87,22 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            footer: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: AppColors.hoverColor,
-                    borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-                  child: Text(
-                    'Version 0.0.1',
-                    style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-                  ),
-                ),
-              ),
-            ),
+
             items: [
               SideMenuItem(
                 title: 'Home',
@@ -185,13 +171,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: const Text("Se déconnecter"),
-                        content: Text("Êtes-vous sûr de vous déconnecter?"),
+                        content: const Text("Êtes-vous sûr de vous déconnecter?"),
                         actions: [
                           ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop(); // Close the dialog
                             },
-                            child: Text('NON'),
+                            child: const Text('NON'),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -199,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.pushNamed(
                                   context, "/login"); // Close the dialog
                             },
-                            child: Text('OUI'),
+                            child: const Text('OUI'),
                           ),
                         ],
                       );
@@ -249,6 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 /// Registration
                 Container(
+
                   color: Colors.white,
                   child: Center(child: RegistrationContent(
                     onTapped: (index) {
@@ -328,22 +315,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 /// Classes
                 Container(
                   color: Colors.white,
-                  child: Center(
-                      child: ClassesContent(
-                        onTapped: (index){
-                          sideMenu.changePage(6);
-                        },
-                      )
+                  child: const Center(
+                      child: Text("Coming soon ....")
                   ),
                 ),
                 /// About
                 Container(
-                  color: Colors.white,
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Colors.orangeAccent, Colors.white],
+
+                      )
+                  ),
+                  //color: Colors.white,
                   child: const Center(
-                    child: Text(
-                      'Coming soon ...',
-                      style: TextStyle(fontSize: 35),
-                    ),
+                    child: Text("Coming soon ....")
                   ),
                 ),
               ],

@@ -2,15 +2,18 @@ import 'package:el_shaddai_edu_portal/add_students_screen/ui/screen/add_students
 import 'package:el_shaddai_edu_portal/login_screen/domain/login_bloc.dart';
 import 'package:el_shaddai_edu_portal/login_screen/ui/screen/login_screen.dart';
 import 'package:el_shaddai_edu_portal/repositories/admin_repository/admin_repository.dart';
+import 'package:el_shaddai_edu_portal/routes/routes.dart';
 import 'package:el_shaddai_edu_portal/school_fees_screen/ui/screen/school_fees_screen.dart';
 import 'package:el_shaddai_edu_portal/signup_screen/ui/screen/signup_screen.dart';
 import 'package:el_shaddai_edu_portal/students_screen/ui/screen/students_screen.dart';
 import 'package:el_shaddai_edu_portal/teachers_screen/ui/screen/teachers_screen.dart';
+import 'package:el_shaddai_edu_portal/themes/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'firebase_config/firebase_config.dart';
 import 'home_screen/ui/screen/home_screen.dart'; // Import Firebase Auth
 
 
@@ -19,11 +22,11 @@ Future main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        databaseURL: 'https://el-shaddai-edu-portal-default-rtdb.firebaseio.com/',
-        apiKey: "AIzaSyCDkrG8RNJd7c1k2Sr2EJ72ntNoxdK1xBk",
-        appId: "1:456559092854:web:3d4d1aee25bc54c13a6b57",
-        messagingSenderId: "456559092854",
-        projectId: "el-shaddai-edu-portal",
+        databaseURL: FirebaseConfig.databaseURL,
+        apiKey: FirebaseConfig.apiKey,
+        appId: FirebaseConfig.appId,
+        messagingSenderId: FirebaseConfig.messagingSenderId,
+        projectId: FirebaseConfig.projectId,
         // Your web Firebase config options
 
       ),
@@ -38,6 +41,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       home: MultiRepositoryProvider(
         providers: [
           RepositoryProvider<AdminRepository>(
@@ -53,13 +58,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'El Shaddai Edu Portal',
       routes: {
-        '/login': (context) => const LoginScreen(),
-        '/signUp': (context) => const SignUpScreen(),
-        '/home': (context) => const HomeScreen(title:"Complexe Scolaire ElShaddai"),
-        '/add_students': (context) => AddStudentsScreen(onAddClicked: (){}, onCancelClicked: (){},),
-        '/teachers': (context) => const TeachersScreen(),
-        '/students': (context) => const StudentsScreen(),
-        '/school_fees': (context) => const SchoolFeesScreen(),
+        Routes.login: (context) => const LoginScreen(),
+        Routes.signUp: (context) => const SignUpScreen(),
+        Routes.home: (context) => const HomeScreen(title: "Complexe Scolaire ElShaddai"),
+        Routes.addStudents: (context) => AddStudentsScreen(onAddClicked: () {}, onCancelClicked: () {}),
+        Routes.teachers: (context) => const TeachersScreen(),
+        Routes.students: (context) => const StudentsScreen(),
+        Routes.schoolFees: (context) => const SchoolFeesScreen(),
 
       },
     );

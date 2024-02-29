@@ -52,7 +52,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ));
 
       }, error: (e) {
-        print("djfndf : ${FirebaseAuthError.noError.name}");
         emit(state.copyWith(
           isLoading: false,
           loginStatus: e,
