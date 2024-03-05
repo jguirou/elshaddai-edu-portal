@@ -1,6 +1,6 @@
-// lib/utils/app_utils.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 class AppUtils {
   static String formatDateTime(DateTime dateTime) {
     final formatter = DateFormat('dd-MM-yyyy');
