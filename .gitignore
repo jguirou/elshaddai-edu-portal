@@ -39,7 +39,7 @@ app.*.symbols
 app.*.map.json
 
 # Ignorer les fichiers sensibles contenant des informations confidentielles
-firebase_config.json
+assets/firebase_config.json
 
 # Android Studio will place build artifacts here
 /android/app/debug
