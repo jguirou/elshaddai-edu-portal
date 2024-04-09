@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import '../../../../domain/repositories/admin_repository/admin_repository.dart';
 import '../../../add_students_screen/ui/widgets/my_card_container.dart';
 import '../../../signup_screen/ui/widgets/form_container_widget.dart';
@@ -91,7 +92,7 @@ class LoginScreen extends StatelessWidget {
                                     .read<LoginBloc>()
                                     .add(OnPasswordFieldChanged(val));
                               },
-                              hintText: "Password",
+                              hintText: "Mot de passe",
                               isPasswordField: true,
                             ),
                             const SizedBox(
@@ -105,7 +106,7 @@ class LoginScreen extends StatelessWidget {
                                     .add(const OnLoginClicked());
                               },
                               child: Container(
-                                width: double.infinity,
+                                width: 50.screenWidth,//double.infinity.screenWidth,
                                 height: 45,
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
@@ -152,7 +153,7 @@ class LoginScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop(); // Close the dialog
                       },
-                      child: Text('OK'),
+                      child: Text('Ok'.toUpperCase()),
                     ),
                   ],
                 );

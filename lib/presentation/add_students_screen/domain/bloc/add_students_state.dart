@@ -1,6 +1,7 @@
 part of 'add_students_bloc.dart';
 
 class AddStudentsState extends Equatable {
+  final String? gender;
   final String name;
   final String familyName;
   final String fatherName;
@@ -14,6 +15,7 @@ class AddStudentsState extends Equatable {
   final List<String>? classes;
 
   const AddStudentsState({
+    this.gender,
     this.name = '',
     this.familyName = '',
     this.fatherName = '',
@@ -30,6 +32,7 @@ class AddStudentsState extends Equatable {
   @override
   // TODO: implement props
   List<Object?> get props => [
+        gender,
         name,
         familyName,
         birthDay,
@@ -44,6 +47,7 @@ class AddStudentsState extends Equatable {
       ];
 
   AddStudentsState copyWith({
+    String? gender,
     String? name,
     String? familyName,
     String? fatherName,
@@ -57,6 +61,7 @@ class AddStudentsState extends Equatable {
     List<String>? classes,
   }) {
     return AddStudentsState(
+      gender: gender ?? this.gender,
       name: name ?? this.name,
       familyName: familyName ?? this.familyName,
       fatherName: fatherName ?? this.fatherName,

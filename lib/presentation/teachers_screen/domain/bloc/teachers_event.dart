@@ -29,3 +29,12 @@ class OnEditTeachersData extends TeachersEvent {
   // TODO: implement props
   List<Object?> get props => [newTeachers];
 }
+class OnDeletedTeacher extends TeachersEvent {
+  const OnDeletedTeacher(this.id);
+
+  final String id;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id];
+}

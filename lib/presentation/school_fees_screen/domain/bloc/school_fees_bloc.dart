@@ -16,6 +16,7 @@ class SchoolFeesBloc extends Bloc<SchoolFeesEvent, SchoolFeesState> {
     on<OnGetStudents>(_onGetStudents);
     on<OnEditStudentsData>(_onEditStudentsData);
     on<OnSchoolFeesUpdated>(_onSchoolFeesUpdated);
+    on<OnGetAllSchoolYears>(_onGetAllSchoolYears);
   }
 
   void _initializeDatabase(InitializeDatabase event, Emitter emit) {
@@ -30,7 +31,7 @@ class SchoolFeesBloc extends Bloc<SchoolFeesEvent, SchoolFeesState> {
 
   void _onGetStudents(OnGetStudents event, Emitter emit) async {
     await for (final event
-        in AdminRepository().getStudentsStream(state.databaseReference!)) {
+        in AdminRepository().getStudentsStream(state.databaseReference!, event.schoolYear)) {
       event.when(loading: () {
         emit(state.copyWith(
           isLoading: true,
@@ -44,20 +45,32 @@ class SchoolFeesBloc extends Bloc<SchoolFeesEvent, SchoolFeesState> {
       });
     }
   }
-
+  void _onGetAllSchoolYears(OnGetAllSchoolYears event, Emitter<SchoolFeesState> emit) async {
+    await for (final event in AdminRepository()
+        .getAllSchoolYearsStream(state.databaseReference!)) {
+      event.when(loading: () {
+        emit(state.copyWith(
+          isLoading: true,
+        ));
+      }, success: (d) {
+        emit(state.copyWith(isLoading: false, listOfSchoolYear: d));
+      }, error: (e) {
+        emit(state.copyWith(
+          isLoading: false,
+        ));
+      });
+    }
+  }
   void _onEditStudentsData(OnEditStudentsData event, Emitter emit) async {
     final studentId = event.newStudents.id;
 
-    await state.databaseReference?.child("students/$studentId").update(
+    await state.databaseReference?.child("students/${event.schoolYear}/$studentId").update(
           event.newStudents.toMap(),
         );
   }
 
   void _onSchoolFeesUpdated(OnSchoolFeesUpdated event, Emitter emit) async {
     await state.databaseReference
-        ?.child('students')
-        .child(event.studentId)
-        .child('schoolFees')
-        .set(event.schoolFees);
+        ?.child("students/${event.schoolYear}/${event.studentId}/schoolFees").set(event.schoolFees);
   }
 }

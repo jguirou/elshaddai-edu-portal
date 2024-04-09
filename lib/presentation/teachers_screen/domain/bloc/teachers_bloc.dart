@@ -13,15 +13,17 @@ class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
     on<InitializeDatabase>(_initializeDatabase);
     on<OnGetTeachers>(_onGetTeachers);
     on<OnEditTeachersData>(_onEditTeachersData);
+    on<OnDeletedTeacher>(_onDeleteTeacher);
   }
 
   void _initializeDatabase(InitializeDatabase event, Emitter emit) {
     final database = FirebaseDatabase.instance.ref();
 
-    final students = database.child("students/").push();
+    final teachers = database.child("teachers/").push();
     emit(state.copyWith(
       databaseReference: database,
-      studentsReference: students,
+      teachersReference: teachers,
+
     ));
   }
 
@@ -53,6 +55,25 @@ class TeachersBloc extends Bloc<TeachersEvent, TeachersState> {
         emit(state.copyWith(
           isLoading: false,
         ));
+      }, error: (e) {
+        emit(state.copyWith(
+          isLoading: false,
+        ));
+      });
+    }
+
+
+  }
+
+  void _onDeleteTeacher(OnDeletedTeacher event, Emitter emit) async {
+    await for (final event
+    in AdminRepository().deleteTeacherStream(state.databaseReference!, event.id)) {
+      event.when(loading: () {
+        emit(state.copyWith(
+          isLoading: true,
+        ));
+      }, success: (d) {
+        emit(state.copyWith(isLoading: false, ));
       }, error: (e) {
         emit(state.copyWith(
           isLoading: false,

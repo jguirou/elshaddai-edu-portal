@@ -1,5 +1,6 @@
 class Teachers {
   final String id;
+  final String? gender;
   final String? name;
   final String? birthDay;
   final String? familyName;
@@ -7,6 +8,7 @@ class Teachers {
 
   const Teachers(
       {required this.id,
+        this.gender,
       this.name,
       this.familyName,
       this.birthDay,
@@ -15,6 +17,7 @@ class Teachers {
   factory Teachers.fromJson(Map<String, dynamic> json) {
     return Teachers(
       id: json['id'] ?? '',
+      gender: json['gender'] ,
       name: json['name'],
       familyName: json['familyName'],
       birthDay: json['birthDay'],
@@ -27,6 +30,7 @@ class Teachers {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'gender': gender,
       'name': name,
       'familyName': familyName,
       'birthDay': birthDay,

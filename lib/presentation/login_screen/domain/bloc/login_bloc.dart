@@ -18,7 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _onEmailFieldChanged(OnEmailFieldChanged event, Emitter emit) {
     emit(state.copyWith(
-      email: event.email,
+      email: event.email.toLowerCase(),
     ));
   }
 

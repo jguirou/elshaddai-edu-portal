@@ -36,10 +36,10 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(.35),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(35),
       ),
       child: TextFormField(
         style: const TextStyle(color: Colors.black),
@@ -53,7 +53,10 @@ class _FormContainerWidgetState extends State<FormContainerWidget> {
           widget.onFieldValueChanged(val);
         },
         decoration: InputDecoration(
-          border: InputBorder.none,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(35.0)
+
+          ),
           filled: true,
           hintText: widget.hintText,
           hintStyle: const TextStyle(color: Colors.black45),

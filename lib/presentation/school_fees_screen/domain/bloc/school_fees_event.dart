@@ -13,30 +13,40 @@ class InitializeDatabase extends SchoolFeesEvent {
 }
 
 class OnGetStudents extends SchoolFeesEvent {
-  const OnGetStudents();
+  const OnGetStudents(this.schoolYear);
+  final String schoolYear;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [schoolYear];
+}
+
+class OnEditStudentsData extends SchoolFeesEvent {
+  const OnEditStudentsData(this.newStudents, this.schoolYear);
+
+  final Students newStudents;
+  final String schoolYear;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [newStudents,schoolYear];
+}
+class OnGetAllSchoolYears extends SchoolFeesEvent {
+  const OnGetAllSchoolYears();
 
   @override
   // TODO: implement props
   List<Object?> get props => [];
 }
 
-class OnEditStudentsData extends SchoolFeesEvent {
-  const OnEditStudentsData(this.newStudents);
-
-  final Students newStudents;
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [newStudents];
-}
-
 class OnSchoolFeesUpdated extends SchoolFeesEvent {
-  const OnSchoolFeesUpdated(this.studentId, this.schoolFees);
+  const OnSchoolFeesUpdated(this.studentId, this.schoolFees, this.schoolYear);
 
   final String studentId;
   final Map<String, int> schoolFees;
+  final String schoolYear;
 
   @override
   // TODO: implement props
-  List<Object?> get props => [studentId, schoolFees];
+  List<Object?> get props => [studentId, schoolFees, schoolYear];
 }

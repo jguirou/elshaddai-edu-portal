@@ -1,4 +1,5 @@
 import 'package:el_shaddai_edu_portal/domain/entities/students/students.dart';
+import 'package:el_shaddai_edu_portal/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/bloc/students_bloc.dart';
@@ -18,6 +19,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
   late List<ExpandableColumn<dynamic>> headers;
   late List<ExpandableRow> rows;
   late Map<String, int> schoolFees;
+  String _selectedYear = AppUtils().getActualSchoolYear();
 
   @override
   void initState() {
@@ -31,14 +33,14 @@ class _StudentsScreenState extends State<StudentsScreen> {
       ExpandableColumn<String>(columnTitle: "ID", columnFlex: 4),
       ExpandableColumn<String>(columnTitle: "Prénom(s)", columnFlex: 4),
       ExpandableColumn<String>(columnTitle: "Nom", columnFlex: 2),
-      ExpandableColumn<String>(columnTitle: "Date de naissance", columnFlex: 3),
-      ExpandableColumn<String>(columnTitle: "Niveau scolaire", columnFlex: 3),
+      ExpandableColumn<String>(columnTitle: "Date de naissance", columnFlex: 5),
+      ExpandableColumn<String>(columnTitle: "Niveau scolaire", columnFlex: 5),
       ExpandableColumn<String>(columnTitle: "Prénom(s) du père", columnFlex: 3),
       ExpandableColumn<String>(
           columnTitle: "Prénom(s) de la mère", columnFlex: 3),
       ExpandableColumn<String>(columnTitle: "Nom de la mère", columnFlex: 3),
       ExpandableColumn<Map<String, int>>(
-          columnTitle: "Frais de scolarité", columnFlex: 3),
+          columnTitle: "Frais de scolarité", columnFlex: 4),
     ];
   }
 
@@ -48,102 +50,149 @@ class _StudentsScreenState extends State<StudentsScreen> {
         body: BlocProvider(
       create: (context) => StudentsBloc()
         ..add(const InitializeDatabase())
-        ..add(const OnGetStudents()),
+        ..add(const OnGetAllSchoolYears())
+        ..add(OnGetStudents(AppUtils().getActualSchoolYear())),
       child: BlocConsumer<StudentsBloc, StudentsState>(
         listener: (context, state) {
           // TODO: implement listenerÅ
         },
         builder: (context, state) {
-          return SafeArea(
-            child: !state.isLoading && state.studentsList.isNotEmpty
-                ? LayoutBuilder(builder: (context, constraints) {
-                    int visibleCount = 5;
-
-                    return ExpandableTheme(
-                      data: ExpandableThemeData(
-                        context,
-                        contentPadding: const EdgeInsets.all(20),
-                        expandedBorderColor: Colors.transparent,
-                        paginationSize: 48,
-                        headerHeight: 56,
-                        headerColor: Colors.amber[400],
-                        headerBorder: const BorderSide(
-                          color: Colors.black,
-                          width: 1,
+          return !state.isLoading && state.studentsList.isNotEmpty
+              ? SafeArea(
+                  child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                            "Année scolaire: ".toUpperCase(),
+                            style: Theme.of(context).textTheme.bodyLarge
                         ),
-                        evenRowColor: const Color(0xFFFFFFFF),
-                        oddRowColor: Colors.amber[100],
-                        rowBorder: const BorderSide(
-                          color: Colors.black,
-                          width: 0.3,
-                        ),
-                        rowColor: Colors.green,
-                        headerTextMaxLines: 4,
-                        headerSortIconColor: Colors.blue,
-                        paginationSelectedFillColor: Colors.blue,
-                        paginationSelectedTextColor: Colors.white,
-                      ),
-                      child: ExpandableDataTable(
-                        headers: headers,
-                        rows: state.studentsList.map<ExpandableRow>((e) {
-                          List<ExpandableCell<dynamic>> cells = [
-                            ExpandableCell<String>(
-                                columnTitle: "ID", value: e.id),
-                            ExpandableCell<String>(
-                                columnTitle: "Prénom(s)", value: e.name),
-                            ExpandableCell<String>(
-                                columnTitle: "Nom", value: e.familyName),
-                            ExpandableCell<String>(
-                                columnTitle: "Date de naissance",
-                                value: e.birthDay),
-                            ExpandableCell<String>(
-                                columnTitle: "Niveau scolaire",
-                                value: e.classLevel),
-                            ExpandableCell<String>(
-                                columnTitle: "Prénom(s) du père",
-                                value: e.fatherName),
-                            ExpandableCell<String>(
-                                columnTitle: "Prénom(s) de la mère",
-                                value: e.motherName),
-                            ExpandableCell<String>(
-                                columnTitle: "Nom de la mère",
-                                value: e.motherFamilyName),
-                            ExpandableCell<Map<String, int>>(
-                                columnTitle: "Frais de scolarité",
-                                value: e.schoolFees),
-                          ];
-
-                          return ExpandableRow(cells: cells);
-                        }).toList(),
-                        multipleExpansion: false,
-                        isEditable: true,
-                        onRowChanged: (newRow) {
-                          print(newRow.cells[01].value);
-                        },
-                        onPageChanged: (page) {
-                          print(page);
-                        },
-                        renderEditDialog: (row, onSuccess) => _buildEditDialog(
-                          row,
-                          onSuccess,
-                          onEdited: (newStudents) {
-                            context
-                                .read<StudentsBloc>()
-                                .add(OnEditStudentsData(newStudents));
+                        DropdownButton<String>(
+                          focusColor: Colors.transparent,
+                          value: _selectedYear,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedYear = newValue!;
+                              context
+                                  .read<StudentsBloc>()
+                                  .add(OnGetStudents(_selectedYear));
+                            });
+                            // Reload screen and call getAllStudents
                           },
+                          items: state.listOfSchoolYear?.map((String year) {
+                            return DropdownMenuItem<String>(
+
+                              value: year,
+                              child: Text(year),
+                            );
+                          }).toList(),
+                        )
+                      ],
+                    ),
+                    LayoutBuilder(builder: (context, constraints) {
+                      int visibleCount = 5;
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: ExpandableTheme(
+                          key: UniqueKey(),
+                          data: ExpandableThemeData(
+                            headerTextStyle: const TextStyle(
+                                fontSize: 8, fontWeight: FontWeight.bold),
+                            rowTextMaxLines: 1,
+                            rowTextStyle: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            context,
+                            contentPadding: const EdgeInsets.all(20),
+                            expandedBorderColor: Colors.transparent,
+                            paginationSize: 48,
+                            headerHeight: 56,
+                            headerColor: Colors.amber[400],
+                            headerBorder: const BorderSide(
+                              color: Colors.black,
+                              width: 1,
+                            ),
+                            evenRowColor: const Color(0xFFFFFFFF),
+                            oddRowColor: Colors.amber[100],
+                            rowBorder: const BorderSide(
+                              color: Colors.black,
+                              width: 0.3,
+                            ),
+                            rowColor: Colors.green,
+                            headerTextMaxLines: 4,
+                            headerSortIconColor: Colors.blue,
+                            paginationSelectedFillColor: Colors.blue,
+                            paginationSelectedTextColor: Colors.white,
+                          ),
+                          child: ExpandableDataTable(
+                            headers: headers,
+                            rows: state.studentsList.map<ExpandableRow>((e) {
+                              List<ExpandableCell<dynamic>> cells = [
+                                ExpandableCell<String>(
+                                    columnTitle: "ID", value: e.id),
+                                ExpandableCell<String>(
+                                    columnTitle: "Prénom(s)", value: e.name),
+                                ExpandableCell<String>(
+                                    columnTitle: "Nom", value: e.familyName),
+                                ExpandableCell<String>(
+                                    columnTitle: "Date de naissance",
+                                    value: e.birthDay),
+                                ExpandableCell<String>(
+                                    columnTitle: "Niveau scolaire",
+                                    value: e.classLevel),
+                                ExpandableCell<String>(
+                                    columnTitle: "Prénom(s) du père",
+                                    value: e.fatherName),
+                                ExpandableCell<String>(
+                                    columnTitle: "Prénom(s) de la mère",
+                                    value: e.motherName),
+                                ExpandableCell<String>(
+                                    columnTitle: "Nom de la mère",
+                                    value: e.motherFamilyName),
+                                ExpandableCell<Map<String, int>>(
+                                    columnTitle: "Frais de scolarité",
+                                    value: e.schoolFees),
+                              ];
+
+                              return ExpandableRow(cells: cells);
+                            }).toList(),
+                            multipleExpansion: false,
+                            isEditable: true,
+                            onRowChanged: (newRow) {
+                              print(newRow.cells[01].value);
+                            },
+                            onPageChanged: (page) {
+                              print(page);
+                            },
+                            renderEditDialog: (row, onSuccess) =>
+                                _buildEditDialog(row, onSuccess,
+                                    onEdited: (newStudents) {
+                              context
+                                  .read<StudentsBloc>()
+                                  .add(OnEditStudentsData(newStudents));
+                            }, () {
+                              context
+                                  .read<StudentsBloc>()
+                                  .add(OnDeletedStudent(row.cells[0].value,_selectedYear));
+                              // I want to reload screen here
+                            }),
+                            visibleColumnCount: visibleCount,
+                          ),
                         ),
-                        visibleColumnCount: visibleCount,
-                      ),
-                    );
-                  })
-                : const Center(child: CircularProgressIndicator()),
-          );
+                      );
+                    }),
+                  ],
+                ))
+              : const Center(child: CircularProgressIndicator());
         },
       ),
     ));
   }
 
-  Widget _buildEditDialog(ExpandableRow row, Function(ExpandableRow) onSuccess,
+  Widget _buildEditDialog(
+      ExpandableRow row, Function(ExpandableRow) onSuccess, Function() onDelete,
       {required Function(Students students) onEdited}) {
     // Existing controllers
     TextEditingController firstNameController = TextEditingController();
@@ -195,15 +244,16 @@ class _StudentsScreenState extends State<StudentsScreen> {
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/school_fees'); // Close the dialog
+            Navigator.of(context).pop(); // Close the dialog
           },
-          child: const Text('Frais de scolarité'),
+          child: const Text('Quitter'),
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
+            onDelete();
+            Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: const Text("Supprimer l'élève"),
         ),
         TextButton(
           onPressed: () {
@@ -230,7 +280,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
             );
             onEdited(newStudents); // Close the dialog
           },
-          child: const Text('Save'),
+          child: const Text('Sauvegarder'),
         ),
       ],
     );

@@ -1,10 +1,14 @@
+import 'package:el_shaddai_edu_portal/presentation/add_teachers_screen/ui/widgets/button_widget.dart';
+import 'package:el_shaddai_edu_portal/presentation/add_teachers_screen/ui/widgets/teacher_classes.dart';
 import 'package:el_shaddai_edu_portal/utils/app_utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../add_students_screen/ui/widgets/date_picker_field.dart';
 import '../../../signup_screen/ui/widgets/form_container_widget.dart';
 import '../../domain/bloc/add_teachers_bloc.dart';
-import 'package:multiselect/multiselect.dart';
+import '../widgets/sex_choose.dart';
 
 class AddTeachersScreen extends StatefulWidget {
   final Function onAddClicked;
@@ -20,6 +24,9 @@ class AddTeachersScreen extends StatefulWidget {
 class _AddTeachersScreenState extends State<AddTeachersScreen> {
   List<String> selectedClasses = [];
   DateTime selectedDate = DateTime.now();
+  List<String> genderOptions = ['M', 'F'];
+  String? _selectedGender;
+  Set<String> selectedValues = {};
   TextEditingController dateController = TextEditingController();
 
   @override
@@ -47,6 +54,24 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    /// Widget to select teacher or students sex.
+                    SexChoose(
+                      gender: genderOptions,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedGender = value;
+                        });
+                        context
+                            .read<AddTeachersBloc>()
+                            .add(OnGenderFieldChanged(_selectedGender!));
+                      },
+                      selectedGender: _selectedGender,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    /// First name text fields
                     FormContainerWidget(
                       hintText: "Prenom(s)",
                       isPasswordField: false,
@@ -59,6 +84,8 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                     const SizedBox(
                       height: 10,
                     ),
+
+                    /// Last name text fields
                     FormContainerWidget(
                       onFieldValueChanged: (val) {
                         context
@@ -101,33 +128,11 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                       },
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(.35),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: DropDownMultiSelect(
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          filled: true,
-                          hintStyle: TextStyle(color: Colors.black45),
-                        ),
-                        onChanged: (List<String> x) {
-                          setState(() {
-                            selectedClasses = x;
-                          });
-                          context
-                              .read<AddTeachersBloc>()
-                              .add(OnClassFieldChanged(x));
-                        },
-                        options: state.classes ?? selectedClasses,
-                        selectedValues: selectedClasses,
-                        whenEmpty: 'Choisissez les classes',
-                      ),
-                    ),
+                    const Divider(),
+                    const TeacherClasses(),
+                    const Divider(),
 
                     const SizedBox(
                       height: 10,
@@ -135,55 +140,21 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GestureDetector(
-                          onTap: () {
+                        ButtonWidget(
+                          buttonColor: Colors.red,
+                          onTapped: () {
                             widget.onCancelClicked();
-                            //_signIn();
-                            /// reload page
                           },
-                          child: Container(
-                            width: 99,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Annuler",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                          title: "Annuler",
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            //_signIn();
+                        ButtonWidget(
+                          onTapped: () {
                             context
                                 .read<AddTeachersBloc>()
                                 .add(const OnAddClicked());
                             widget.onAddClicked();
                           },
-                          child: Container(
-                            width: 99,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Valider",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                          title: "Valider",
                         ),
                       ],
                     ),

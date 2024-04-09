@@ -58,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: sideMenu,
             style: SideMenuStyle(
               // showTooltip: false,
+              unselectedTitleTextStyle: Theme.of(context).textTheme.bodyLarge,
               displayMode: SideMenuDisplayMode.auto,
               hoverColor: AppColors.hoverColor,
               selectedHoverColor: AppColors.hoverColor,
@@ -88,12 +89,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             items: [
               SideMenuItem(
-                title: 'Home',
+                title: 'Accueil',
                 onTap: (index, _) {
                   sideMenu.changePage(index);
                 },
                 icon: const Icon(Icons.home),
-                tooltipContent: "This is a tooltip for Dashboard item",
+                tooltipContent: "Accueil",
               ),
               SideMenuItem(
                 title: 'Élèves',
@@ -194,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Expanded(
             child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
               children: [
                 /// Home

@@ -2,6 +2,7 @@ part of 'add_teachers_bloc.dart';
 
 class AddTeachersState extends Equatable {
   final String name;
+  final String? gender;
   final String familyName;
   final String? birthDay;
   final List<String> classLevel;
@@ -11,6 +12,7 @@ class AddTeachersState extends Equatable {
 
   const AddTeachersState({
     this.name = '',
+    this.gender,
     this.familyName = '',
     this.birthDay,
     this.classLevel = const [],
@@ -23,6 +25,7 @@ class AddTeachersState extends Equatable {
   // TODO: implement props
   List<Object?> get props => [
         name,
+        gender,
         familyName,
         databaseReference,
         teachersReference,
@@ -33,6 +36,7 @@ class AddTeachersState extends Equatable {
 
   AddTeachersState copyWith({
     String? name,
+    String? gender,
     String? familyName,
     String? birthDay,
     List<String>? classLevel,
@@ -42,6 +46,7 @@ class AddTeachersState extends Equatable {
   }) {
     return AddTeachersState(
       name: name ?? this.name,
+      gender: gender ?? this.gender,
       familyName: familyName ?? this.familyName,
       birthDay: birthDay ?? this.birthDay,
       classLevel: classLevel ?? this.classLevel,

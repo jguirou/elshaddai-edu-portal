@@ -47,7 +47,15 @@ class OnAgeFieldChanged extends AddTeachersEvent {
   // TODO: implement props
   List<Object?> get props => [age];
 }
+class OnGenderFieldChanged extends AddTeachersEvent {
+  final String gender;
 
+  const OnGenderFieldChanged(this.gender);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [gender];
+}
 class OnClassFieldChanged extends AddTeachersEvent {
   final List<String> classLevel;
 

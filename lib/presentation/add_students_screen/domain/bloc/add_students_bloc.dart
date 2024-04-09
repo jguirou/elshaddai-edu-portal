@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'package:el_shaddai_edu_portal/utils/app_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_database/firebase_database.dart';
-
+import 'package:intl/date_symbol_data_local.dart';
 part 'add_students_event.dart';
 
 part 'add_students_state.dart';
@@ -11,6 +12,7 @@ part 'add_students_state.dart';
 class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
   AddStudentsBloc() : super(AddStudentsState()) {
     on<InitializeDatabase>(_initializeDatabase);
+    on<OnGenderFieldChanged>(_onGenderFieldChanged);
     on<OnFamilyNameFieldChanged>(_onFamilyNameFieldChanged);
     on<OnNameFieldChanged>(_onNameFieldChanged);
     on<OnDateOfBirthFieldChanged>(_onDateOfBirthFieldChanged);
@@ -22,7 +24,11 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
     on<OnAgeFieldChanged>(_onAgeFieldChanged);
     on<OnClassFieldChanged>(_onClassFieldChanged);
   }
-
+  void _onGenderFieldChanged(OnGenderFieldChanged event, Emitter emit) {
+    emit(state.copyWith(
+      gender: event.gender,
+    ));
+  }
   void _onFamilyNameFieldChanged(OnFamilyNameFieldChanged event, Emitter emit) {
     emit(state.copyWith(
       familyName: event.familyName,
@@ -83,11 +89,28 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
     ));
   }
 
-  void _onAddClicked(OnAddClicked event, Emitter emit) {
-    final newStudents = state.databaseReference?.child("students/").push();
+  void _onAddClicked(OnAddClicked event, Emitter emit)  {
+    final List<String> schoolMonths = [
+      'Septembre',
+      'Octobre',
+      'Novembre',
+      'Décembre',
+      'Janvier',
+      'Février',
+      'Mars',
+      'Avril',
+      'Mai',
+      'Juin',
+      'Juillet',
+      'Août',
+    ];
+    final schoolYear = AppUtils().getActualSchoolYear();
+    final newStudents = state.databaseReference?.child("students/$schoolYear/").push();
+
     String userId = newStudents!.key!;
     newStudents.set({
       'id': userId,
+      'gender': state.gender,
       'name': state.name,
       'familyName': state.familyName,
       'birthDay': state.birthDay,
@@ -97,9 +120,9 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
       'motherName': state.motherName,
       'motherFamilyName': state.motherFamilyName,
       'schoolFees': {
-        for (var date
-            in List.generate(12, (index) => DateTime(2022, index + 1)))
-          DateFormat.MMMM().format(date): 0
+        for (var month
+            in schoolMonths)
+          month: 0
       }
     });
 

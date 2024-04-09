@@ -12,6 +12,7 @@ part 'add_teachers_state.dart';
 class AddTeachersBloc extends Bloc<AddTeachersEvent, AddTeachersState> {
   AddTeachersBloc() : super(AddTeachersState()) {
     on<InitializeDatabase>(_initializeDatabase);
+    on<OnGenderFieldChanged>(_onGenderFieldChanged);
     on<OnFamilyNameFieldChanged>(_onFamilyNameFieldChanged);
     on<OnNameFieldChanged>(_onNameFieldChanged);
     on<OnAddClicked>(_onAddClicked);
@@ -23,6 +24,11 @@ class AddTeachersBloc extends Bloc<AddTeachersEvent, AddTeachersState> {
   void _onFamilyNameFieldChanged(OnFamilyNameFieldChanged event, Emitter emit) {
     emit(state.copyWith(
       familyName: event.familyName,
+    ));
+  }
+  void _onGenderFieldChanged(OnGenderFieldChanged event, Emitter emit) {
+    emit(state.copyWith(
+      gender: event.gender,
     ));
   }
 
@@ -60,6 +66,7 @@ class AddTeachersBloc extends Bloc<AddTeachersEvent, AddTeachersState> {
     String userId = newStudents!.key!;
     newStudents.set({
       'id': userId,
+      'gender': state.gender,
       'name': state.name,
       'familyName': state.familyName,
       'birthDay': state.birthDay,

@@ -1,6 +1,9 @@
+import 'package:el_shaddai_edu_portal/presentation/add_students_screen/ui/widgets/students_school_level_fields.dart';
+import 'package:el_shaddai_edu_portal/presentation/add_teachers_screen/ui/widgets/sex_choose.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utils/app_utils.dart';
+import '../../../add_teachers_screen/ui/widgets/button_widget.dart';
 import '../../../signup_screen/ui/widgets/form_container_widget.dart';
 
 import '../../domain/bloc/add_students_bloc.dart';
@@ -20,6 +23,8 @@ class AddStudentsScreen extends StatefulWidget {
 class _AddStudentsScreenState extends State<AddStudentsScreen> {
   String selectedClass = '1ère Année';
   DateTime selectedDate = DateTime.now();
+  List<String> genderOptions = ['M', 'F'];
+  String? _selectedGender;
   TextEditingController dateController =
       TextEditingController(); // Initial selected date
 
@@ -45,7 +50,21 @@ class _AddStudentsScreenState extends State<AddStudentsScreen> {
           return Padding(
             padding: const EdgeInsets.all(0.0),
             child: SingleChildScrollView(
-              child: Column(children: [
+              child: Column(
+                  children: [
+                SexChoose(
+                  gender: genderOptions,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGender = value;
+                    });
+                    context
+                        .read<AddStudentsBloc>()
+                        .add(OnGenderFieldChanged(_selectedGender!));
+                  },
+                  selectedGender: _selectedGender,
+                ),
+                const SizedBox(height: 20),
                 FormContainerWidget(
                   hintText: "Prenom(s)",
                   isPasswordField: false,
@@ -103,49 +122,18 @@ class _AddStudentsScreenState extends State<AddStudentsScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+                const Text("Niveau scolaire", textAlign: TextAlign.start,),
 
                 /// level
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(.35),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButton<String>(
-                    underline: Container(),
-                    //icon: null,
-                    value: selectedClass,
-                    isExpanded: true,
-                    items: state.classes?.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(value),
-                        ),
-                        onTap: () {
-                          context
-                              .read<AddStudentsBloc>()
-                              .add(OnClassFieldChanged(value));
-                          context
-                              .read<AddStudentsBloc>()
-                              .add(const OnClassClicked());
-                        },
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedClass = newValue ?? '';
-                      });
-                    },
-                  ),
-                ),
+                const StudentsSchoolLevelFields(),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                const Text('Parents'),
+                const Divider(),
+                 Text('Parents', style: Theme.of(context).textTheme.titleLarge, ),
+                const Divider(),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 FormContainerWidget(
                   hintText: "Prenom(s) du père",
@@ -188,55 +176,21 @@ class _AddStudentsScreenState extends State<AddStudentsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    GestureDetector(
-                      onTap: () {
+                    ButtonWidget(
+                      buttonColor: Colors.red,
+                      onTapped: () {
                         widget.onCancelClicked();
-                        //_signIn();
-                        /// reload page
                       },
-                      child: Container(
-                        width: 99,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Annuler",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                      title: "Annuler",
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        //_signIn();
+                    ButtonWidget(
+                      onTapped: () {
                         context
                             .read<AddStudentsBloc>()
                             .add(const OnAddClicked());
                         widget.onAddClicked();
                       },
-                      child: Container(
-                        width: 99,
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Valider",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                      title: "Valider",
                     ),
                   ],
                 ),
@@ -247,4 +201,5 @@ class _AddStudentsScreenState extends State<AddStudentsScreen> {
       ),
     ));
   }
+
 }

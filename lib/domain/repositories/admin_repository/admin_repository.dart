@@ -100,6 +100,51 @@ class AdminRepository {
     }
   }
 
+  Future<Resource<bool>?> deleteStudent(DatabaseReference databaseReference, String studentId, String schoolYear) async {
+    try {
+      await databaseReference.child("students/$schoolYear/$studentId").remove();
+      return Resource.success(true);
+    } catch (e) {
+      return Resource.error("Error: $e");
+    }
+  }
+  Stream<Resource<bool>> deleteStudentsStream(
+      DatabaseReference databaseReference, String id, String schoolYear) async* {
+    try {
+      final result = await deleteStudent(databaseReference, id, schoolYear);
+
+      if (result != null && result is Success<bool>) {
+        yield Resource.success(result.data);
+      }
+    } catch (e) {
+
+      yield Resource.error("Error ghh: $e");
+    }
+  }
+
+  Future<Resource<bool>?> deleteTeacher(DatabaseReference databaseReference, String teacherId) async {
+    try {
+      await databaseReference.child("teachers/$teacherId").remove();
+      return Resource.success(true);
+    } catch (e) {
+      print("Error deleting teacher: $e");
+      return Resource.error("Error ghh: $e");
+    }
+  }
+  Stream<Resource<bool>> deleteTeacherStream(
+      DatabaseReference databaseReference, String id) async* {
+    try {
+      final result = await deleteTeacher(databaseReference, id);
+
+      if (result != null && result is Success<bool>) {
+        yield Resource.success(result.data);
+      }
+    } catch (e) {
+      print("Error deleting teacher: $e");
+      yield Resource.error("Error ghh: $e");
+    }
+  }
+
   Future<Resource<bool>?> updateTeachers(
       DatabaseReference databaseReference, Teachers teachers) async {
     try {
@@ -126,11 +171,11 @@ class AdminRepository {
   }
 
   Stream<Resource<ListOfStudents>> getStudentsStream(
-      DatabaseReference databaseReference) {
+      DatabaseReference databaseReference, String schoolYear) {
     final StreamController<Resource<ListOfStudents>> controller =
         StreamController<Resource<ListOfStudents>>();
 
-    databaseReference.child('students/').onValue.listen((event) {
+    databaseReference.child('students/').child('$schoolYear/').onValue.listen((event) {
       final data = event.snapshot.value as Map<String, dynamic>;
       if (data != null) {
         try {
@@ -145,6 +190,35 @@ class AdminRepository {
     });
 
     return controller.stream;
+  }
+
+  Future<List<String>> getAllSchoolYears(DatabaseReference databaseReference) async {
+    List<String> schoolYears = [];
+
+    try {
+      DatabaseEvent dataSnapshot = await databaseReference.child('students/').once();
+
+      // Check if the snapshot has data
+      if (dataSnapshot.snapshot.value != null) {
+        // Iterate over the children and extract the keys
+        (dataSnapshot.snapshot.value as Map<dynamic, dynamic>).forEach((key, value) {
+          schoolYears.add(key);
+        });
+      }
+    } catch (e) {
+      print('Error fetching school years: $e');
+    }
+
+    return schoolYears;
+  }
+  Stream<Resource<List<String>>> getAllSchoolYearsStream(
+      DatabaseReference databaseReference) async* {
+    try {
+      final result = await getAllSchoolYears(databaseReference);
+      yield Resource.success(result);
+    } catch (e) {
+      yield Resource.error("Error: $e");
+    }
   }
 
   Stream<Resource<ListOfTeachers>> getTeachersStream(

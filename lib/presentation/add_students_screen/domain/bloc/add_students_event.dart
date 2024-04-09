@@ -37,6 +37,15 @@ class OnNameFieldChanged extends AddStudentsEvent {
   // TODO: implement props
   List<Object?> get props => [name];
 }
+class OnGenderFieldChanged extends AddStudentsEvent {
+  final String gender;
+
+  const OnGenderFieldChanged(this.gender);
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [gender];
+}
 
 class OnFatherNameFieldChanged extends AddStudentsEvent {
   final String name;

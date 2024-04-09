@@ -4,7 +4,7 @@ class DatePickerField extends StatefulWidget {
   const DatePickerField(
       {super.key,
       this.fieldKey,
-      this.hintText,
+      this.hintText= "Date de Naissance",
       this.labelText,
       required this.dateController,
       required this.onTapped});
@@ -26,15 +26,14 @@ class _DatePickerFieldState extends State<DatePickerField> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(.35),
-        borderRadius: BorderRadius.circular(10),
+        //color: Colors.grey.withOpacity(.35),
+        borderRadius: BorderRadius.circular(35),
       ),
       child: TextFormField(
+
         decoration: InputDecoration(
-          border: InputBorder.none,
-          filled: true,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(35.0)),
           hintText: widget.hintText,
-          hintStyle: const TextStyle(color: Colors.black45),
         ),
         style: const TextStyle(color: Colors.black),
         controller: widget.dateController,

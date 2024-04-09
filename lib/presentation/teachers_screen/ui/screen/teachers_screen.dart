@@ -31,9 +31,10 @@ class _TeachersScreenState extends State<TeachersScreen> {
       ExpandableColumn<String>(columnTitle: "ID", columnFlex: 4),
       ExpandableColumn<String>(columnTitle: "Prénom(s)", columnFlex: 4),
       ExpandableColumn<String>(columnTitle: "Nom", columnFlex: 2),
-      ExpandableColumn<String>(columnTitle: "Date de naissance", columnFlex: 3),
+      ExpandableColumn<String>(columnTitle: "Date de naissance", columnFlex: 5),
       ExpandableColumn<List<String>>(columnTitle: "Classes", columnFlex: 5),
     ];
+
   }
 
   @override
@@ -48,13 +49,23 @@ class _TeachersScreenState extends State<TeachersScreen> {
           // TODO: implement listener
         },
         builder: (context, state) {
-          return SafeArea(
+          return !state.isLoading ? SafeArea(
             child: !state.isLoading && state.teachersList.isNotEmpty
                 ? LayoutBuilder(builder: (context, constraints) {
                     int visibleCount = 5;
 
                     return ExpandableTheme(
                       data: ExpandableThemeData(
+                        headerTextStyle: const TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold
+                        ),
+                        rowTextMaxLines: 1,
+                        rowTextStyle: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+
+                        ),
                         context,
                         contentPadding: const EdgeInsets.all(20),
                         expandedBorderColor: Colors.transparent,
@@ -103,7 +114,11 @@ class _TeachersScreenState extends State<TeachersScreen> {
                           print(page);
                         },
                         renderEditDialog: (row, onSuccess) => _buildEditDialog(
-                            row, onSuccess, onEdited: (newTeacher) {
+                            row, onSuccess,
+                            (){
+                              context.read<TeachersBloc>().add(OnDeletedTeacher(row.cells[0].value));
+                            },
+                            onEdited: (newTeacher) {
                           context
                               .read<TeachersBloc>()
                               .add(OnEditTeachersData(newTeacher));
@@ -113,13 +128,13 @@ class _TeachersScreenState extends State<TeachersScreen> {
                     );
                   })
                 : const Center(child: CircularProgressIndicator()),
-          );
+          ):const Center(child: CircularProgressIndicator());
         },
       ),
     ));
   }
 
-  Widget _buildEditDialog(ExpandableRow row, Function(ExpandableRow) onSuccess,
+  Widget _buildEditDialog(ExpandableRow row, Function(ExpandableRow) onSuccess,Function() onDelete,
       {required Function(Teachers teachers) onEdited}) {
     TextEditingController firstNameController = TextEditingController();
     TextEditingController lastNameController = TextEditingController();
@@ -131,7 +146,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
     birthDateController.text = row.cells[3].value ?? '';
 
     return AlertDialog(
-      title: const Text("Modifier les données de l'élève"),
+      title: const Text("Modifier les données de l'enseignant"),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -170,11 +185,20 @@ class _TeachersScreenState extends State<TeachersScreen> {
       ),
       actions: [
         TextButton(
+
+          onPressed: (){
+            onDelete();
+            Navigator.of(context).pop();
+          },
+          child: const Text("Supprimer l'enseignant"),
+        ),
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog
           },
-          child: const Text('Cancel'),
+          child: const Text('Quitter'),
         ),
+
         TextButton(
           onPressed: () {
             // Perform the update with the new values
@@ -194,7 +218,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
                 classes: row.cells[4].value);
             onEdited(newTeacher); // Close the dialog
           },
-          child: const Text('Save'),
+          child: const Text('Sauvegarder'),
         ),
       ],
     );
