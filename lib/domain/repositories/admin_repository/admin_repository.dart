@@ -4,6 +4,9 @@ import 'package:el_shaddai_edu_portal/domain/entities/teachers/teachers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import '../../../core/resource.dart';
+import '../../../utils/exceptions/firebase_auth_exceptions.dart';
+import '../../../utils/exceptions/firebase_exceptions.dart';
+import '../../../utils/exceptions/format_exceptions.dart';
 
 enum Class {
   petiteSection,
@@ -76,7 +79,7 @@ class AdminRepository {
   }
 
   Future<Resource<bool>?> updateStudents(
-      DatabaseReference databaseReference, Students students) async {
+      DatabaseReference databaseReference, Student students) async {
     try {
       await databaseReference.child("students/${students.id}").update(
             students.toMap(),
@@ -88,7 +91,7 @@ class AdminRepository {
   }
 
   Stream<Resource<bool>> updateStudentsStream(
-      DatabaseReference databaseReference, Students students) async* {
+      DatabaseReference databaseReference, Student students) async* {
     try {
       final result = await updateStudents(databaseReference, students);
 
@@ -101,7 +104,7 @@ class AdminRepository {
   }
 
   Future<Resource<bool>?> updateTeachers(
-      DatabaseReference databaseReference, Teachers teachers) async {
+      DatabaseReference databaseReference, Teacher teachers) async {
     try {
       await databaseReference.child("teachers/${teachers.id}").update(
             teachers.toMap(),
@@ -113,7 +116,7 @@ class AdminRepository {
   }
 
   Stream<Resource<bool>> updateTeachersStream(
-      DatabaseReference databaseReference, Teachers teachers) async* {
+      DatabaseReference databaseReference, Teacher teachers) async* {
     try {
       final result = await updateTeachers(databaseReference, teachers);
 
@@ -192,22 +195,33 @@ class AdminRepository {
     }
   }
 
-  Future<User?> signInWithEmailAndPassword(
+  Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
-    UserCredential userCredential = await firebaseAuth
-        .signInWithEmailAndPassword(email: email, password: password);
-    return userCredential.user;
+    try{
+      return await firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+    } on FirebaseAuthException catch(e){
+      throw CustomFirebaseAuthExceptions(e.code).message;
+    } on FirebaseException catch (e){
+      throw CustomFirebaseExceptions(e.code).message;
+
+    } on FormatException catch(_){
+      throw CustomFormatException();
+
+    } catch (e){
+      throw 'Something went wrong. Please try again';
+    }
   }
 
-  Stream<Resource<User?>> signIn(String email, String password) async* {
+
+
+  Stream<Resource<UserCredential>> signIn(String email, String password) async* {
     try {
       final result = await signInWithEmailAndPassword(email, password);
 
       yield Resource.success(result);
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        yield Resource.error(e.code);
-      }
+      yield Resource.error(e);
     }
   }
 }
