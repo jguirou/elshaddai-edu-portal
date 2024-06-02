@@ -39,7 +39,7 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
         },
         builder: (context, state) {
           return Padding(
-            padding: const EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(AppSizes.defaultSpace),
             child: SingleChildScrollView(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +74,6 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                     DatePickerField(
                       labelText: AppTexts.dateOfBirth,
                       dateController: dateController,
-                      hintText: AppTexts.dateOfBirth,
                       onTapped: () async {
                         final DateTime? picked = await showDatePicker(
                           context: context,
@@ -135,55 +134,24 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            widget.onCancelClicked();
-                            //_signIn();
-                            /// reload page
-                          },
-                          child: Container(
-                            width: 99,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                AppTexts.cancel,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            context
-                                .read<AddTeachersBloc>()
-                                .add(const OnAddClicked());
-                            widget.onAddClicked();
-                          },
-                          child: Container(
-                            width: 99,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                AppTexts.validate,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        SizedBox(
+                            width: AppSizes.buttonWidthMedium,
+                            child: OutlinedButton(
+                                onPressed: () {
+                                  widget.onCancelClicked();
+                                },
+                                child: const Text(AppTexts.cancel))),
+                        SizedBox(
+                          width: AppSizes.buttonWidthMedium,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                context
+                                    .read<AddTeachersBloc>()
+                                    .add(const OnAddClicked());
+                                widget.onAddClicked();
+                              },
+                              child: const Text(AppTexts.validate)),
+                        )
                       ],
                     ),
                   ]),

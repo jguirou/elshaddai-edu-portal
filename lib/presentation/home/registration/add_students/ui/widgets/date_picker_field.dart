@@ -25,18 +25,11 @@ class _DatePickerFieldState extends State<DatePickerField> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: widget.hintText,
-        border: const OutlineInputBorder().copyWith(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Colors.grey, width: 1),
-        ),
-
-        filled: true,
-        hintText: widget.hintText,
-        //hintStyle: const TextStyle(color: Colors.black45),
+        labelText: widget.labelText,
+        hintText: widget.labelText ,
         prefixIcon: const Icon(Icons.date_range),
       ),
-      //style: const TextStyle(color: Colors.black),
+
       controller: widget.dateController,
       readOnly: true,
       onTap: widget.onTapped,

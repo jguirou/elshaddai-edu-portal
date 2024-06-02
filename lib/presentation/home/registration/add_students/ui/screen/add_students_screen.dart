@@ -39,161 +39,166 @@ class _AddStudentsScreenState extends State<AddStudentsScreen> {
           // TODO: implement listener
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              // First Name Field
-              TextFormField(
-                onChanged: (val) {
-                  context.read<AddStudentsBloc>().add(OnNameFieldChanged(val));
-                },
-                decoration:
-                    const InputDecoration(labelText: AppTexts.firstName),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwInputField),
-              // last name
-              TextFormField(
-                onChanged: (val) {
-                  context
-                      .read<AddStudentsBloc>()
-                      .add(OnFamilyNameFieldChanged(val));
-                },
-                decoration: const InputDecoration(labelText: AppTexts.lastName),
-              ),
-
-              const SizedBox(height: AppSizes.spaceBtwInputField),
-
-              /// birthday
-              DatePickerField(
-                dateController: dateController,
-                onTapped: () async {
-                  final DateTime? picked =
-                      await myShowDatePicker(context, selectedDate);
-
-                  if (picked != null && picked != selectedDate) {
-                    setState(() {
-                      selectedDate = picked;
-                      dateController.text = '${picked.toLocal()}'.split(' ')[0];
-                    });
-                    // Dispatch the event to the Bloc
-                    if (context.mounted) {
-                      context.read<AddStudentsBloc>().add(
-                          OnDateOfBirthFieldChanged(
-                              Formatter.formatDate(selectedDate)));
-                    }
-                  }
-                },
-              ),
-
-              const SizedBox(height: AppSizes.spaceBtwInputField),
-
-              /// level
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey.withOpacity(.35),
-                  ),
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
+          return Padding(
+            padding: const EdgeInsets.all(AppSizes.defaultSpace),
+            child: SingleChildScrollView(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                // First Name Field
+                TextFormField(
+                  onChanged: (val) {
+                    context.read<AddStudentsBloc>().add(OnNameFieldChanged(val));
+                  },
+                  decoration:
+                      const InputDecoration(labelText: AppTexts.firstName),
                 ),
-                child: DropdownButton<String>(
-                  underline: Container(),
-                  value: selectedClass.isNotEmpty ? selectedClass : null,
-                  isExpanded: true,
-                  hint: Padding(
-                    padding: const EdgeInsets.only(left: AppSizes.defaultSpace),
-                    child: Text(
-                      AppTexts.chooseStudentsLevel,
-                      style: Theme.of(context).textTheme.labelMedium,
-                    ),
-                  ),
-                  items: state.classes?.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(value),
-                      ),
-                      onTap: () {
-                        context
-                            .read<AddStudentsBloc>()
-                            .add(OnClassFieldChanged(value));
-                        context
-                            .read<AddStudentsBloc>()
-                            .add(const OnGetClassLevel());
-                      },
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedClass = newValue ?? '';
-                    });
+                const SizedBox(height: AppSizes.spaceBtwInputField),
+                // last name
+                TextFormField(
+                  onChanged: (val) {
+                    context
+                        .read<AddStudentsBloc>()
+                        .add(OnFamilyNameFieldChanged(val));
+                  },
+                  decoration: const InputDecoration(labelText: AppTexts.lastName),
+                ),
+
+                const SizedBox(height: AppSizes.spaceBtwInputField),
+
+                /// birthday
+                DatePickerField(
+
+                  labelText: AppTexts.dateOfBirth,
+                  dateController: dateController,
+                  onTapped: () async {
+                    final DateTime? picked =
+                        await myShowDatePicker(context, selectedDate);
+
+                    if (picked != null && picked != selectedDate) {
+                      setState(() {
+                        selectedDate = picked;
+                        dateController.text = '${picked.toLocal()}'.split(' ')[0];
+                      });
+                      // Dispatch the event to the Bloc
+                      if (context.mounted) {
+                        context.read<AddStudentsBloc>().add(
+                            OnDateOfBirthFieldChanged(
+                                Formatter.formatDate(selectedDate)));
+                      }
+                    }
                   },
                 ),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwSections / 2),
-              const Text(AppTexts.parents),
-              const SizedBox(
-                height: AppSizes.spaceBtwSections / 2,
-              ),
-              TextFormField(
-                onChanged: (val) {
-                  context
-                      .read<AddStudentsBloc>()
-                      .add(OnFatherNameFieldChanged(val));
-                },
-                decoration:
-                    const InputDecoration(labelText: AppTexts.fatherFirstName),
-              ),
 
-              const SizedBox(height: AppSizes.spaceBtwInputField),
-              TextFormField(
-                onChanged: (val) {
-                  context
-                      .read<AddStudentsBloc>()
-                      .add(OnMotherNameFieldChanged(val));
-                },
-                decoration:
-                    const InputDecoration(labelText: AppTexts.motherFirstName),
-              ),
-              const SizedBox(height: AppSizes.spaceBtwInputField),
-              TextFormField(
-                onChanged: (val) {
-                  context
-                      .read<AddStudentsBloc>()
-                      .add(OnMotherFamilyNameFieldChanged(val));
-                },
-                decoration:
-                    const InputDecoration(labelText: AppTexts.motherLastName),
-              ),
+                const SizedBox(height: AppSizes.spaceBtwInputField),
 
-              const SizedBox(height: AppSizes.spaceBtwInputField),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: AppSizes.buttonWidthMedium,
-                    child: OutlinedButton(
-                      onPressed: widget.onCancelClicked,
-                      child: const Text(AppTexts.cancel),
+                /// level
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(.35),
                     ),
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  SizedBox(
-                    width: AppSizes.buttonWidthMedium,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<AddStudentsBloc>()
-                            .add(const OnAddClicked());
-                        widget.onAddClicked!();
-                      },
-                      child: const Text(AppTexts.validate),
+                  child: DropdownButton<String>(
+                    underline: Container(),
+                    value: selectedClass.isNotEmpty ? selectedClass : null,
+                    isExpanded: true,
+                    hint: Padding(
+                      padding: const EdgeInsets.only(left: AppSizes.defaultSpace),
+                      child: Text(
+                        AppTexts.chooseStudentsLevel,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
                     ),
+                    items: state.classes?.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(value),
+                        ),
+                        onTap: () {
+                          context
+                              .read<AddStudentsBloc>()
+                              .add(OnClassFieldChanged(value));
+                          context
+                              .read<AddStudentsBloc>()
+                              .add(const OnGetClassLevel());
+                        },
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedClass = newValue ?? '';
+                      });
+                    },
                   ),
-                ],
-              ),
-            ]),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwSections / 2),
+                const Text(AppTexts.parents),
+                const SizedBox(
+                  height: AppSizes.spaceBtwSections / 2,
+                ),
+                TextFormField(
+                  onChanged: (val) {
+                    context
+                        .read<AddStudentsBloc>()
+                        .add(OnFatherNameFieldChanged(val));
+                  },
+                  decoration:
+                      const InputDecoration(labelText: AppTexts.fatherFirstName),
+                ),
+
+                const SizedBox(height: AppSizes.spaceBtwInputField),
+                TextFormField(
+                  onChanged: (val) {
+                    context
+                        .read<AddStudentsBloc>()
+                        .add(OnMotherNameFieldChanged(val));
+                  },
+                  decoration:
+                      const InputDecoration(labelText: AppTexts.motherFirstName),
+                ),
+                const SizedBox(height: AppSizes.spaceBtwInputField),
+                TextFormField(
+                  onChanged: (val) {
+                    context
+                        .read<AddStudentsBloc>()
+                        .add(OnMotherFamilyNameFieldChanged(val));
+                  },
+                  decoration:
+                      const InputDecoration(labelText: AppTexts.motherLastName),
+                ),
+
+                const SizedBox(height: AppSizes.spaceBtwInputField),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: AppSizes.buttonWidthMedium,
+                      child: OutlinedButton(
+                        onPressed: widget.onCancelClicked,
+                        child: const Text(AppTexts.cancel),
+                      ),
+                    ),
+                    SizedBox(
+                      width: AppSizes.buttonWidthMedium,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context
+                              .read<AddStudentsBloc>()
+                              .add(const OnAddClicked());
+                          widget.onAddClicked!();
+                        },
+                        child: const Text(AppTexts.validate),
+                      ),
+                    ),
+                  ],
+                ),
+              ]),
+            ),
           );
         },
       ),

@@ -84,8 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.only(
                               left: AppSizes.registrationLeftRight,
                               right: AppSizes.registrationLeftRight,
-                              bottom: 0,
-                              top: 0),
+                              ),
                           child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             child: AlertDialog(
