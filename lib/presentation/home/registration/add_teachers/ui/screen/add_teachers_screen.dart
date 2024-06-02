@@ -72,6 +72,7 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
 
                     /// birthday
                     DatePickerField(
+                      labelText: AppTexts.dateOfBirth,
                       dateController: dateController,
                       hintText: AppTexts.dateOfBirth,
                       onTapped: () async {
@@ -106,7 +107,6 @@ class _AddTeachersScreenState extends State<AddTeachersScreen> {
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        //color: Colors.grey.withOpacity(.35),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: DropDownMultiSelect(
