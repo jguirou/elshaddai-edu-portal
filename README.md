@@ -37,7 +37,9 @@ flutter version 3.10.0
 
 ###  3. Install Dependencies
 Navigate to the project directory and run the following command to install all necessary dependencies:
- ``` flutter pub get ```
+ ``` 
+ flutter pub get 
+ ```
 
 ### 4. Run the App
-   You can now run the app on your emulator or physical device:
+   You can now run the app on your chrome browser
