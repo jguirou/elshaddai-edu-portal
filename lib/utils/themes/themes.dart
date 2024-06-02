@@ -31,17 +31,17 @@ class AppTheme {
   /// Dark theme
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
-    brightness: Brightness.dark,
+    brightness: Brightness.light,
     primaryColor: Colors.blue,
     hintColor: Colors.blue,
-    scaffoldBackgroundColor: Colors.black,
-    textTheme: MyTextTheme.darkTextTheme,
-    elevatedButtonTheme: MyElevatedButtonTheme.darkElevatedButtonTheme,
-    appBarTheme: MyAppBarTheme.darkAppBarTheme,
-    bottomSheetTheme: MyBottomSheetTheme.darkBottomSheetTheme,
-    checkboxTheme: MyCheckBoxTheme.darkCheckboxThemeData,
-    outlinedButtonTheme: MyOutlineButtonTheme.darkOutlineButtonTheme,
-    inputDecorationTheme: MyTextFieldTheme.darkTextFieldTheme,
-    chipTheme: MyChipTheme.darkChipThemeData,
+    scaffoldBackgroundColor: Colors.white,
+    textTheme: MyTextTheme.lightTextTheme,
+    elevatedButtonTheme: MyElevatedButtonTheme.lightElevatedButtonTheme,
+    appBarTheme: MyAppBarTheme.lightAppBarTheme,
+    bottomSheetTheme: MyBottomSheetTheme.lightBottomSheetTheme,
+    checkboxTheme: MyCheckBoxTheme.lightCheckboxThemeData,
+    outlinedButtonTheme: MyOutlineButtonTheme.lightOutlineButtonTheme,
+    inputDecorationTheme: MyTextFieldTheme.lightTextFieldTheme,
+    chipTheme: MyChipTheme.lightChipThemeData,
   );
 }
