@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Teacher {
   final String id;
+  final String? gender;
   final String? name;
   final String? birthDay;
   final String? familyName;
@@ -9,6 +10,7 @@ class Teacher {
 
   const Teacher(
       {required this.id,
+        this.gender,
       this.name,
       this.familyName,
       this.birthDay,
@@ -17,6 +19,7 @@ class Teacher {
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       id: json['id'] ?? '',
+      gender: json['gender'],
       name: json['name'],
       familyName: json['familyName'],
       birthDay: json['birthDay'],
@@ -29,6 +32,7 @@ class Teacher {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'gender': gender,
       'name': name,
       'familyName': familyName,
       'birthDay': birthDay,
@@ -43,6 +47,7 @@ class Teacher {
     return Teacher(
       id: document.id,
       name: data['name'] ?? '',
+      gender: data['gender'],
       familyName: data['familyName'],
       birthDay: data['birthDay'],
       classes:

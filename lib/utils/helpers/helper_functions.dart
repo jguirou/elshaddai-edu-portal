@@ -116,6 +116,25 @@ class HelperFunctions {
     return wrappedList;
   }
 
+  static String getActualSchoolYear() {
+    // Get the current date
+    DateTime currentDate = DateTime.now();
 
+    // Determine the start and end months of the school year
+    int startMonth = 9; // September
+    int endMonth = 8;   // August
+
+    // Determine the start year of the school year
+    int startYear = currentDate.month >= startMonth ? currentDate.year : currentDate.year - 1;
+
+    // Determine the end year of the school year
+    int endYear = currentDate.month <= endMonth ? currentDate.year : currentDate.year + 1;
+
+    // Construct the school year string
+    String schoolYear = '$startYear-$endYear';
+    print("fdjkjfkjgkfjgj: $schoolYear");
+
+    return schoolYear;
+  }
 
 }

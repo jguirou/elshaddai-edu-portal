@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import '../../../../../domain/entities/students/students.dart';
+import '../../../../../utils/helpers/helper_functions.dart';
 
 
 
@@ -21,8 +22,9 @@ class SchoolFeesBloc extends Bloc<SchoolFeesEvent, SchoolFeesState> {
 
 
   void _onGetStudents(OnGetStudents event, Emitter emit) async {
+    final schoolYear = HelperFunctions.getActualSchoolYear();
     await for (final event
-        in StudentRepository().getAllStudentsStream()) {
+        in StudentRepository().getAllStudentsStream(schoolYear)) {
       event.when(loading: () {
         emit(state.copyWith(
           isLoading: true,
@@ -38,9 +40,10 @@ class SchoolFeesBloc extends Bloc<SchoolFeesEvent, SchoolFeesState> {
   }
 
   void _onEditStudentsData(OnEditStudentsData event, Emitter emit) async {
+    final schoolYear =  HelperFunctions.getActualSchoolYear();
 
     await for (final event in StudentRepository()
-        .updateStudentStream(event.newStudents)) {
+        .updateStudentStream(event.newStudents, schoolYear)) {
       event.when(loading: () {
         emit(state.copyWith(
           isLoading: true,

@@ -59,6 +59,7 @@ class AppTexts {
   static const String motherFirstName = "Prénom(s) de la mère";
   static const String motherLastName = "Nom de la mère";
   static const String schoolFee = "Frais de scolarité";
+  static const String schoolYear = "Année scolaire: ";
 
 
 }

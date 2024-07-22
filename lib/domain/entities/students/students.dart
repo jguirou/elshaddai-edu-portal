@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 class Student {
   final String id;
+  final String? gender;
   final String? name;
   final String? birthDay;
   final String? familyName;
@@ -12,8 +13,9 @@ class Student {
   final String? motherFamilyName;
   final Map<String, int>? schoolFees;
 
-  const Student({
+  const Student( {
     required this.id,
+    this.gender,
     this.name,
     this.familyName,
     this.birthDay,
@@ -27,6 +29,7 @@ class Student {
   /// Empty helper function
   static Student empty() => Student(
           id: "",
+          gender: "",
           name: "",
           familyName: "",
           birthDay: "",
@@ -43,6 +46,7 @@ class Student {
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
       id: json['id'] ?? '',
+      gender: json['gender'],
       name: json['name'],
       familyName: json['familyName'],
       birthDay: json['birthDay'],
@@ -60,6 +64,7 @@ class Student {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'gender': gender,
       'name': name,
       'familyName': familyName,
       'birthDay': birthDay,
@@ -78,6 +83,7 @@ class Student {
     return Student(
       id: document.id,
       name: data['name'] ?? '',
+      gender: data['gender'],
       familyName: data['familyName'],
       birthDay: data['birthDay'],
       classLevel: data['classLevel'],

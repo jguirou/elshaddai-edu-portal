@@ -7,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 import '../../../../../../domain/entities/students/students.dart';
 import '../../../../../../domain/repositories/student_repository/student_repository.dart';
+import '../../../../../../utils/helpers/helper_functions.dart';
 
 part 'add_students_event.dart';
 
@@ -24,6 +25,7 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
     on<OnGetClassLevel>(_onGetClassLevel);
     on<OnAgeFieldChanged>(_onAgeFieldChanged);
     on<OnClassFieldChanged>(_onClassFieldChanged);
+    on<OnGenderFieldChanged>(_onGenderFieldChanged);
   }
 
   void _onFamilyNameFieldChanged(OnFamilyNameFieldChanged event, Emitter emit) {
@@ -41,6 +43,11 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
   void _onMotherNameFieldChanged(OnMotherNameFieldChanged event, Emitter emit) {
     emit(state.copyWith(
       motherName: event.name,
+    ));
+  }
+  void _onGenderFieldChanged(OnGenderFieldChanged event, Emitter emit) {
+    emit(state.copyWith(
+      gender: event.gender,
     ));
   }
 
@@ -94,9 +101,11 @@ class AddStudentsBloc extends Bloc<AddStudentsEvent, AddStudentsState> {
     DateFormat.MMMM().format(date): 0
     }
     );
+    final schoolYear = HelperFunctions.getActualSchoolYear();
+
 
     await for (final event
-    in StudentRepository().addStudentStream(student)) {
+    in StudentRepository().addStudentStream(student, schoolYear )) {
       event.when(loading: () {
         emit(state.copyWith(
           isLoading: true,

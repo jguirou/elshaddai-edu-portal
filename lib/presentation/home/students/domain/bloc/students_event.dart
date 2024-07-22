@@ -13,11 +13,12 @@ abstract class StudentsEvent extends Equatable {
 }*/
 
 class OnGetStudents extends StudentsEvent {
-  const OnGetStudents();
+  const OnGetStudents(this.schoolYear);
+  final String schoolYear;
 
   @override
   // TODO: implement props
-  List<Object?> get props => [];
+  List<Object?> get props => [schoolYear];
 }
 
 class OnEditStudentsData extends StudentsEvent {
@@ -28,4 +29,34 @@ class OnEditStudentsData extends StudentsEvent {
   @override
   // TODO: implement props
   List<Object?> get props => [newStudents];
+}
+
+class OnSelectSchoolYear extends StudentsEvent {
+  const OnSelectSchoolYear();
+  //final String schoolYear;
+
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+class OnGetAllSchoolYears extends StudentsEvent {
+  const OnGetAllSchoolYears();
+
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
+
+class OnDeletedStudent extends StudentsEvent {
+  const OnDeletedStudent(this.id, this.schoolYear);
+
+  final String id;
+  final String schoolYear;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id,schoolYear];
 }
